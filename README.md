@@ -26,20 +26,20 @@ A config file is required to run this application. A sample is provided below an
 			<authority>
 				<signerId>RRT</signerId>
 				<url>http://www.rim.net/Websigner/servlet/Runtime</url>
-				<clientId>123456789</clientId>
-				<password>password</password>
+				<clientId>${clientId}</clientId>
+				<password>${password}</password>
 			</authority>
 			<authority>
 				<signerId>RBB</signerId>
 				<url>http://www.rim.net/Websigner/servlet/BBApps</url>
-				<clientId>123456789</clientId>
-				<password>password</password>
+				<clientId>${clientId}</clientId>
+				<password>${password}</password>
 			</authority>
 			<authority>
 				<signerId>RCR</signerId>
 				<url>http://www.rim.net/Websigner/servlet/CryptoRIM</url>
-				<clientId>123456789</clientId>
-				<password>password</password>
+				<clientId>${clientId}</clientId>
+				<password>${password}</password>
 			</authority>
 		</authorities>
 		<cods>
