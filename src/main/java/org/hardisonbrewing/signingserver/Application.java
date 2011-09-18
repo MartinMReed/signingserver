@@ -121,16 +121,19 @@ public class Application {
         return _cods;
     }
 
+    private static long getFileSize( File[] files ) {
+
+        long size = 0;
+        for (File file : files) {
+            size += file.length();
+        }
+        return size;
+    }
+
     private static SigningResponse sign( SigningConfiguration signingConfiguration, File[] cods, SigningAuthority signingAuthority ) throws Exception {
 
         SigningResponse signingResponse = new SigningResponse();
         signingResponse.signingAuthority = signingAuthority;
-
-        long size = 0;
-
-        for (int i = 0; i < cods.length; i++) {
-            size += cods[i].length();
-        }
 
         int success = 0;
         int failure = 0;
@@ -139,27 +142,33 @@ public class Application {
         long duration = 0;
 
         for (int i = 0; i < cods.length; i++) {
+
             boolean _success = false;
             int _retry;
             long _duration = 0;
+
             for (_retry = 0; !_success && _retry < 5;) {
+
                 long start = System.currentTimeMillis();
+
                 try {
                     _success = sign( signingConfiguration, signingAuthority, cods[i] );
                 }
                 catch (Exception e) {
                     // do nothing
                 }
-                finally {
-                    long end = System.currentTimeMillis();
-                    _duration += end - start;
-                }
+
+                long end = System.currentTimeMillis();
+                _duration += end - start;
+
                 if ( !_success ) {
                     _retry++;
                 }
             }
+
             duration += _duration / ( _retry + 1 );
             retry += _retry;
+
             if ( _success ) {
                 success++;
             }
@@ -171,8 +180,8 @@ public class Application {
         signingResponse.success = success;
         signingResponse.failure = failure;
         signingResponse.retry = retry;
-        signingResponse.size = size;
         signingResponse.duration = duration;
+        signingResponse.size = getFileSize( cods );
         signingResponse.count = cods.length;
         return signingResponse;
     }
