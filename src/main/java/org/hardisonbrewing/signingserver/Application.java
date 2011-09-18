@@ -78,8 +78,7 @@ public class Application {
         InputStream inputStream = null;
         try {
             inputStream = new FileInputStream( file );
-            byte[] bytes = IOUtil.toByteArray( inputStream );
-            return JAXB.unmarshal( bytes, SigningConfiguration.class );
+            return JAXB.unmarshal( inputStream, SigningConfiguration.class );
         }
         finally {
             IOUtil.close( inputStream );
@@ -127,23 +126,15 @@ public class Application {
         SigningResponse signingResponse = new SigningResponse();
         signingResponse.signingAuthority = signingAuthority;
 
-        int success = 0;
-        int failure = 0;
-        int retry = 0;
-
         long size = 0;
 
         for (int i = 0; i < cods.length; i++) {
-            InputStream inputStream = null;
-            try {
-                inputStream = new FileInputStream( cods[i] );
-                byte[] bytes = IOUtil.toByteArray( inputStream );
-                size += bytes.length;
-            }
-            finally {
-                IOUtil.close( inputStream );
-            }
+            size += cods[i].length();
         }
+
+        int success = 0;
+        int failure = 0;
+        int retry = 0;
 
         long duration = 0;
 
@@ -232,15 +223,14 @@ public class Application {
         byte[] postData = getPostData( signingResponses );
         System.out.println( "POST length[" + postData.length + "], data[" + new String( postData, "UTF-8" ) + "]" );
 
-        URL socialSubmitUrl = new URL( signingConfiguration.getTracker() );
-        HttpURLConnection httpUrlConnection = (HttpURLConnection) socialSubmitUrl.openConnection();
+        URL url = new URL( signingConfiguration.getTracker() );
+        HttpURLConnection httpUrlConnection = (HttpURLConnection) url.openConnection();
         httpUrlConnection.setRequestMethod( "POST" );
         httpUrlConnection.setConnectTimeout( 5000 );
         httpUrlConnection.setDoOutput( true );
         httpUrlConnection.setRequestProperty( "Content-Type", "application/json" );
 
         OutputStream outputStream = null;
-
         try {
             outputStream = httpUrlConnection.getOutputStream();
             outputStream.write( postData );
@@ -288,25 +278,25 @@ public class Application {
 
     private static boolean sign( SigningConfiguration signingConfiguration, SigningAuthority signingAuthority, File cod ) throws Exception {
 
-        InputStream codStream = null;
+        InputStream inputStream = null;
 
         try {
 
-            codStream = new FileInputStream( cod );
+            inputStream = new FileInputStream( cod );
 
             Signer signer = new Signer();
             signer.url = new URL( signingAuthority.getUrl() );
             signer.signerId = signingAuthority.getSignerId();
             signer.clientId = signingAuthority.getClientId();
             signer.password = signingAuthority.getPassword();
-            signer.input = codStream;
+            signer.input = inputStream;
             signer.salt = signingConfiguration.getSalt();
             signer.privateKey = signingConfiguration.getPrivateKey();
             signer.sign();
             return signer.getSignature() != null;
         }
         finally {
-            IOUtil.close( codStream );
+            IOUtil.close( inputStream );
         }
     }
 
