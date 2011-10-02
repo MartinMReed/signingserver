@@ -1,6 +1,6 @@
 Usage Notes
 =====
-This is a simple JAVA application for tracking the RIM signing server status. 
+This is a simple JAVA application for tracking the RIM signing server status.
 
 To run the application you can execute using `java -jar signingserver.jar config.xml`
 
