@@ -8,7 +8,7 @@ Build
 -----------------
 To build this you need to use Maven.
 
-The NARST (Not A Real SignatureTool, but close enough) library is a required dependency. It is available under the [signingserver-jar](https://github.com/hardisonbrewing/signingserver-jar) project.  
+The NARST (Not A Real SignatureTool, but close enough) library is a required dependency. It is available under the [narst-lib](https://github.com/hardisonbrewing/narst-lib) project.  
 The NARST library is responsible for the actual signing attempts made to the RIM server.
 
 A config file is required to run this application. A sample is provided below and uses values from the CSK and DB files used with the SignatureTool.jar.
