@@ -6,6 +6,7 @@
 	<xs:complexType name="SigningConfiguration">
 		<xs:sequence>
 			<xs:element name="tracker" type="xs:string" minOccurs="1" maxOccurs="1" />
+			<xs:element name="signer" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="salt" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="privateKey" type="xs:string" minOccurs="1" maxOccurs="1" />
 			<xs:element name="authorities" minOccurs="1" maxOccurs="1">
@@ -15,10 +16,10 @@
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="cods" minOccurs="1" maxOccurs="1">
+			<xs:element name="files" minOccurs="1" maxOccurs="1">
 				<xs:complexType>
 					<xs:sequence>
-						<xs:element name="cod" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
+						<xs:element name="file" type="xs:string" minOccurs="1" maxOccurs="unbounded" />
 					</xs:sequence>
 				</xs:complexType>
 			</xs:element>

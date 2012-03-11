@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2011 Martin M Reed
+ * Copyright (c) 2011-2012 Martin M Reed
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -34,7 +34,7 @@ import org.hardisonbrewing.jaxb.JAXB;
 import org.hardisonbrewing.narst.Signer;
 import org.hardisonbrewing.schemas.model.SigningAuthority;
 import org.hardisonbrewing.schemas.model.SigningConfiguration;
-import org.hardisonbrewing.schemas.model.SigningConfiguration.Cods;
+import org.hardisonbrewing.schemas.model.SigningConfiguration.Files;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -52,10 +52,10 @@ public class Application {
         SigningAuthority[] signingAuthorities = getSigningAuthorities( signingConfiguration );
         SigningResponse[] signingResponses = new SigningResponse[signingAuthorities.length];
 
-        File[] cods = getCods( signingConfiguration, config.getParentFile() );
+        File[] files = getFiles( signingConfiguration, config.getParentFile() );
 
         for (int i = 0; i < signingAuthorities.length; i++) {
-            signingResponses[i] = sign( signingConfiguration, cods, signingAuthorities[i] );
+            signingResponses[i] = sign( signingConfiguration, files, signingAuthorities[i] );
         }
 
         submit( signingConfiguration, signingResponses );
@@ -102,23 +102,23 @@ public class Application {
         return _signingAuthorities;
     }
 
-    private static File[] getCods( SigningConfiguration signingConfiguration, File directory ) throws Exception {
+    private static File[] getFiles( SigningConfiguration signingConfiguration, File directory ) throws Exception {
 
-        Cods cods = signingConfiguration.getCods();
-        if ( cods == null ) {
+        Files files = signingConfiguration.getFiles();
+        if ( files == null ) {
             return null;
         }
 
-        List<String> codPaths = cods.getCod();
-        if ( codPaths == null || codPaths.isEmpty() ) {
+        List<String> filePaths = files.getFile();
+        if ( filePaths == null || filePaths.isEmpty() ) {
             return null;
         }
 
-        File[] _cods = new File[codPaths.size()];
-        for (int i = 0; i < _cods.length; i++) {
-            _cods[i] = getFile( directory, codPaths.get( i ) );
+        File[] _files = new File[filePaths.size()];
+        for (int i = 0; i < _files.length; i++) {
+            _files[i] = getFile( directory, filePaths.get( i ) );
         }
-        return _cods;
+        return _files;
     }
 
     private static long getFileSize( File[] files ) {
@@ -130,7 +130,7 @@ public class Application {
         return size;
     }
 
-    private static SigningResponse sign( SigningConfiguration signingConfiguration, File[] cods, SigningAuthority signingAuthority ) throws Exception {
+    private static SigningResponse sign( SigningConfiguration signingConfiguration, File[] files, SigningAuthority signingAuthority ) throws Exception {
 
         SigningResponse signingResponse = new SigningResponse();
         signingResponse.signingAuthority = signingAuthority;
@@ -141,7 +141,7 @@ public class Application {
 
         long duration = 0;
 
-        for (int i = 0; i < cods.length; i++) {
+        for (int i = 0; i < files.length; i++) {
 
             boolean _success = false;
             int _retry;
@@ -152,7 +152,7 @@ public class Application {
                 long start = System.currentTimeMillis();
 
                 try {
-                    _success = sign( signingConfiguration, signingAuthority, cods[i] );
+                    _success = sign( signingConfiguration, signingAuthority, files[i] );
                 }
                 catch (Exception e) {
                     // do nothing
@@ -181,8 +181,8 @@ public class Application {
         signingResponse.failure = failure;
         signingResponse.retry = retry;
         signingResponse.duration = duration;
-        signingResponse.size = getFileSize( cods );
-        signingResponse.count = cods.length;
+        signingResponse.size = getFileSize( files );
+        signingResponse.count = files.length;
         return signingResponse;
     }
 
@@ -285,27 +285,27 @@ public class Application {
         }
     }
 
-    private static boolean sign( SigningConfiguration signingConfiguration, SigningAuthority signingAuthority, File cod ) throws Exception {
+    private static boolean sign( SigningConfiguration signingConfiguration, SigningAuthority signingAuthority, File file ) throws Exception {
 
-        InputStream inputStream = null;
+        Signer signer;
 
         try {
+            Class<?> clazz = Class.forName( signingConfiguration.getSigner() );
+            signer = (Signer) clazz.newInstance();
 
-            inputStream = new FileInputStream( cod );
-
-            Signer signer = new Signer();
-            signer.url = new URL( signingAuthority.getUrl() );
-            signer.signerId = signingAuthority.getSignerId();
-            signer.clientId = signingAuthority.getClientId();
-            signer.password = signingAuthority.getPassword();
-            signer.input = inputStream;
-            signer.salt = signingConfiguration.getSalt();
-            signer.privateKey = signingConfiguration.getPrivateKey();
-            signer.sign();
-            return signer.getSignature() != null;
+            String url = signingAuthority.getUrl();
+            signer.setUrl( url == null || url.length() == 0 ? null : new URL( url ) );
+            signer.setSignerId( signingAuthority.getSignerId() );
+            signer.setClientId( signingAuthority.getClientId() );
+            signer.setPassword( signingAuthority.getPassword() );
+            signer.setInput( file );
+            signer.setSalt( signingConfiguration.getSalt() );
+            signer.setPrivateKey( signingConfiguration.getPrivateKey() );
+            return signer.sign();
         }
-        finally {
-            IOUtil.close( inputStream );
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
