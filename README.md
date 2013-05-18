@@ -55,8 +55,7 @@ A config file is required to run this application. A sample is provided below an
 	</config>
 
 # Related Projects
-[Signing Server Monitoring Site](https://github.com/hardisonbrewing/signingserver-com) 
-[Custom Signature Tool](https://github.com/hardisonbrewing/signingserver)  
+[Signing Server Monitoring Site](https://github.com/hardisonbrewing/signingserver-com)  
 [Signing Library](https://github.com/hardisonbrewing/narst)  
 [Arduino Sign](https://github.com/hardisonbrewing/arduino-signingserver-sign)  
 [BlackBerry JAVA App](https://github.com/hardisonbrewing/signingserver-bb)
