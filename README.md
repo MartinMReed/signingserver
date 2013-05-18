@@ -1,11 +1,9 @@
-Usage Notes
-=====
+# Usage Notes
 This is a simple JAVA application for tracking the RIM signing server status.
 
 To run the application you can execute using `java -jar signingserver.jar config.xml`
 
-Build
------------------
+## Build
 To build this you need to use Maven.
 
 The NARST (Not A Real SignatureTool, but close enough) library is a required dependency. It is available under the [narst-lib](https://github.com/hardisonbrewing/narst-lib) project.  
@@ -55,3 +53,10 @@ A config file is required to run this application. A sample is provided below an
 			<cod>sigtool-9.cod</cod>
 		</cods>
 	</config>
+
+# Related Projects
+[Signing Server Monitoring Site](https://github.com/hardisonbrewing/signingserver-com) 
+[Custom Signature Tool](https://github.com/hardisonbrewing/signingserver)  
+[Signing Library](https://github.com/hardisonbrewing/narst)  
+[Arduino Sign](https://github.com/hardisonbrewing/arduino-signingserver-sign)  
+[BlackBerry JAVA App](https://github.com/hardisonbrewing/signingserver-bb)
