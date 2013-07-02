@@ -10,6 +10,8 @@ A config file is required to run this application. A sample is provided below an
 	<config xmlns="http://hardisonbrewing.org/schemas/model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://hardisonbrewing.org/schemas/model config.xsd">
 		<!-- URL of the tracker website that will accept the signing results -->
 		<tracker>${tracker}</tracker>
+		<!-- <signer>org.hardisonbrewing.narst.bar.Signer</signer> -->
+		<signer>org.hardisonbrewing.narst.cod.Signer</signer>
 		<!-- Salt from CSK file -->
 		<salt>${salt}</salt>
 		<!-- PrivateKey from CSK file -->
@@ -35,18 +37,18 @@ A config file is required to run this application. A sample is provided below an
 				<password>${password}</password>
 			</authority>
 		</authorities>
-		<cods>
-			<cod>sigtool-0.cod</cod>
-			<cod>sigtool-1.cod</cod>
-			<cod>sigtool-2.cod</cod>
-			<cod>sigtool-3.cod</cod>
-			<cod>sigtool-4.cod</cod>
-			<cod>sigtool-5.cod</cod>
-			<cod>sigtool-6.cod</cod>
-			<cod>sigtool-7.cod</cod>
-			<cod>sigtool-8.cod</cod>
-			<cod>sigtool-9.cod</cod>
-		</cods>
+		<files>
+			<file>sigtool-0.cod</file>
+			<file>sigtool-1.cod</file>
+			<file>sigtool-2.cod</file>
+			<file>sigtool-3.cod</file>
+			<file>sigtool-4.cod</file>
+			<file>sigtool-5.cod</file>
+			<file>sigtool-6.cod</file>
+			<file>sigtool-7.cod</file>
+			<file>sigtool-8.cod</file>
+			<file>sigtool-9.cod</file>
+		</files>
 	</config>
 
 ## Related Projects
