@@ -1,4 +1,3 @@
-Custom signature tool for signing BlackBerry COD files.  
 Required dependency: [narst](https://github.com/hardisonbrewing/narst).  
 This project is used with the [signingserver-com](https://github.com/hardisonbrewing/signingserver-com) website.
 
